@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'HYPixel 13px J';
+    src: url('HYPixel13px-J.woff2') format('woff2'),
+        url('HYPixel13px-J.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

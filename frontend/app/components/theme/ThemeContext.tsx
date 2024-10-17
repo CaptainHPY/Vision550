@@ -4,6 +4,7 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 const ThemeContext = createContext({
     theme: 'dark',
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setTheme: (theme: string) => {},
 });
 

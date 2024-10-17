@@ -119,6 +119,7 @@ const CallAssistant: React.FC<CallAssistantProps> = ({ onUpdateChatHistory }) =>
   };
 
   const convertWebmToWav = async (webmBlob: Blob): Promise<Blob> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
     const audioContext = new AudioContext();
     const arrayBuffer = await webmBlob.arrayBuffer();

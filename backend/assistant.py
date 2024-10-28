@@ -1,14 +1,14 @@
 import base64
-from threading import Lock, Thread
-
 import os
+import io
+
+from threading import Lock, Thread
 from cv2 import VideoCapture, imencode
 from dotenv import load_dotenv
 from speech_recognition import Recognizer, UnknownValueError, AudioFile
 from openai import OpenAI
 from flask import Flask, request, jsonify, send_file, make_response
 from flask_cors import CORS
-import io
 
 load_dotenv()
 app = Flask(__name__)
@@ -55,9 +55,8 @@ class WebcamStream:
         if self.thread.is_alive():
             self.thread.join()
 
-    def __exit__(self, exc_type, exc_value, exc_traceback):
+    def __exit__(self):
         self.stream.release()
-
 
 class Assistant:
     def __init__(self):
@@ -76,7 +75,9 @@ class Assistant:
             messages=[
                 {
                     "role": "system",
-                    "content": "你是一个机智的助手，依据用户提供的聊天记录和图片回答问题。回答时简明扼要，直奔主题。注意不要使用emoji以及问用户问题。友善待人，乐于助人，可以展现一点个性，但不要太正式。"
+                    "content": """你是一个机智的助手，依据用户提供的聊天记录和图片回答问题。
+                                回答时简明扼要，直奔主题。注意不要使用emoji以及问用户问题。
+                                友善待人，乐于助人，可以展现一点个性，但不要太正式。"""
                 },
                 {
                     "role": "user",
@@ -105,6 +106,7 @@ class Assistant:
 assistant = Assistant()
 recognizer = Recognizer()
 webcam_stream = None
+latest_image = None
 
 @app.route('/api/start_webcam', methods=['POST'])
 def start_webcam():
@@ -122,10 +124,16 @@ def get_camera_frame():
             return jsonify({'status': 'success', 'frame': frame.decode('utf-8')})
     return jsonify({'status': 'error', 'message': '无法获取摄像头帧'}), 400
 
-@app.route('/api/recognize_speech', methods=['POST'])
-def recognize_speech():
+@app.route('/api/recognize_data', methods=['POST'])
+def recognize_data():
+    global latest_image
     audio_file = request.files['audio']
     try:
+        if webcam_stream and webcam_stream.running:
+            latest_image = webcam_stream.read(encode=True)
+        else:
+            return jsonify({'error': '摄像头未启动'}), 400
+
         audio_path = 'received_audio.wav'
         audio_file.save(audio_path)
 
@@ -142,14 +150,13 @@ def recognize_speech():
 
 @app.route('/api/call_assistant', methods=['POST'])
 def call_assistant():
+    global latest_image
     prompt = request.json.get('prompt', '')
 
-    if webcam_stream and webcam_stream.running:
-        image = webcam_stream.read(encode=True)
-    else:
-        return jsonify({'error': '摄像头未启动'}), 400
+    if latest_image is None:
+        return jsonify({'error': '没有可用的图像'}), 400
 
-    text_response = assistant.answer(prompt, image)
+    text_response = assistant.answer(prompt, latest_image)
     
     encoded_text_response = base64.b64encode(text_response.encode('utf-8')).decode('ascii')
     

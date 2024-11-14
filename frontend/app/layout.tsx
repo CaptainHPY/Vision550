@@ -1,7 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./globals.css"; 
+import "./globals.css";
 import { ThemeProvider } from './components/theme/ThemeContext';
 
 const geistSans = localFont({
@@ -18,7 +18,7 @@ const hyPixel = localFont({
 
 export const metadata: Metadata = {
   title: "Vision550",
-  description: "An application for video calls with AI assistant.",
+  description: "An application for video call with AI assistant.",
 };
 
 export default function RootLayout({

@@ -18,9 +18,9 @@ export default function Camera() {
             }
         };
 
-        const intervalId = setInterval(fetchCameraFrame, 100); // 每100毫秒获取一次新帧
+        const intervalId = setInterval(fetchCameraFrame, 100);
 
-        return () => clearInterval(intervalId); // 清理定时器
+        return () => clearInterval(intervalId);
     }, []);
 
     return (

@@ -2,7 +2,7 @@ import React from "react";
 
 interface ThemeButtonProps {
     onToggle: () => void;
-  }
+}
 
 export default function ThemeButton({ onToggle }: ThemeButtonProps) {
     const handleClick = () => {

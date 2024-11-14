@@ -8,10 +8,10 @@ import { useRouter } from 'next/navigation';
 import { useTheme } from "./components/theme/ThemeContext";
 
 export default function Home() {
+  const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [firstTypingComplete, setFirstTypingComplete] = useState(false);
   const [secondTypingComplete, setSecondTypingComplete] = useState(false);
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const toggleTheme = () => {

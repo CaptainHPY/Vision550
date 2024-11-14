@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import audioBufferToWav from 'audiobuffer-to-wav';
 
 interface CallAssistantProps {
@@ -6,9 +7,11 @@ interface CallAssistantProps {
 }
 
 const CallAssistant: React.FC<CallAssistantProps> = ({ onUpdateChatHistory }) => {
+  const router = useRouter();
   const [isRecording, setIsRecording] = useState(false);
   const [isRecognizing, setIsRecognizing] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -61,7 +64,6 @@ const CallAssistant: React.FC<CallAssistantProps> = ({ onUpdateChatHistory }) =>
       const audioBlob = await response.blob();
       const encodedTextResponse = response.headers.get('X-Text-Response');
 
-      // 解码 Base64 编码的文本响应
       const textResponse = encodedTextResponse
         ? decodeURIComponent(escape(atob(encodedTextResponse)))
         : '';
@@ -132,6 +134,24 @@ const CallAssistant: React.FC<CallAssistantProps> = ({ onUpdateChatHistory }) =>
     }
   };
 
+  const handleStopClick = async () => {
+    setIsClosing(true);
+    try {
+      const response = await fetch('/api/stop_webcam', {
+        method: 'POST',
+      });
+      if (response.ok) {
+        router.push('/');
+      } else {
+        console.error('停止摄像头失败');
+      }
+    } catch (error) {
+      console.error('请求错误:', error);
+    } finally {
+      setIsClosing(false);
+    }
+  };
+
   const convertWebmToWav = async (webmBlob: Blob): Promise<Blob> => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
@@ -144,7 +164,18 @@ const CallAssistant: React.FC<CallAssistantProps> = ({ onUpdateChatHistory }) =>
   };
 
   return (
-    <>
+    <div className="flex gap-4 items-center flex-col sm:flex-row font-[family-name:var(--font-geist-sans)]">
+      <button
+        className='inline-flex rounded px-6 py-3 font-bold text-lg sm:text-xl md:text-2xl 
+                        border border-gray-300 
+                        shadow-sm dark:border-gray-600 focus:outline-none focus-visible:ring focus-visible:ring-primary-300 
+                        scale-100 hover:scale-[1.03] active:scale-[0.97] motion-safe:transform-gpu motion-reduce:hover:scale-100 
+                        motion-reduce:hover:brightness-90 transition duration-100 animate-shadow'
+        onClick={handleStopClick}
+        disabled={isRecording || isRecognizing || isProcessing || isClosing}
+      >
+        {isClosing ? '正在关闭...' : '返回主页'}
+      </button>
       <button
         className="inline-flex rounded px-6 py-3 font-bold text-lg sm:text-xl md:text-2xl 
                   bg-red-600 hover:bg-red-500 border border-red-600 text-white
@@ -153,12 +184,12 @@ const CallAssistant: React.FC<CallAssistantProps> = ({ onUpdateChatHistory }) =>
                   motion-safe:transform-gpu motion-reduce:hover:scale-100 
                   motion-reduce:hover:brightness-90 transition duration-100 animate-shadow"
         onClick={handleCallAssistant}
-        disabled={isProcessing}
+        disabled={isRecognizing || isProcessing || isClosing}
       >
         {isRecording ? '停止录音' : isRecognizing ? '识别信息中...' : isProcessing ? '处理中...' : '呼叫Vision550'}
       </button>
       <audio ref={audioRef} style={{ display: 'none' }} />
-    </>
+    </div>
   );
 };
 

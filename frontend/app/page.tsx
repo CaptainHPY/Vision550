@@ -2,9 +2,10 @@
 
 import React, { useState } from "react";
 import { ReactTyped } from "react-typed";
+import Image from "next/image";
+import { useRouter } from 'next/navigation';
 import Footer from "./components/Footer";
 import ThemeButton from "./components/theme/ThemeButton";
-import { useRouter } from 'next/navigation';
 import { useTheme } from "./components/theme/ThemeContext";
 
 export default function Home() {
@@ -46,7 +47,10 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col gap-8 items-center">
-        <div className="text-6xl text-center font-[family-name:var(--font-hypixel)] mt-[60px]">
+        <div className="text-6xl text-center font-[family-name:var(--font-hypixel)]">
+          <div className="flex items-center justify-center">
+            <Image src="/logo.gif" width={250} height={250} alt="logo" unoptimized />
+          </div>
           <div className="mb-2 flex items-center justify-center">
             <ReactTyped
               strings={["VISION550"]}
@@ -61,7 +65,7 @@ export default function Home() {
           <div className="flex justify-center">
             <ReactTyped
               showCursor={firstTypingComplete}
-              strings={["——智能语音通话助手"]}
+              strings={["——智能视频通话助手"]}
               typeSpeed={200}
               cursorChar="_"
               startDelay={2400}

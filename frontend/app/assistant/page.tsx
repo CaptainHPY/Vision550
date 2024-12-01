@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import ThemeButton from "../components/theme/ThemeButton";
-import Footer from "../components/Footer";
-import { useTheme } from "../components/theme/ThemeContext";
-import ChatHistory from "./ChatHistory";
+import Image from "next/image";
 import CallAssistant from "./CallAssistant";
 import Camera from "./Camera";
+import ChatHistory from "./ChatHistory";
+import Footer from "../components/Footer";
+import ThemeButton from "../components/theme/ThemeButton";
+import { useTheme } from "../components/theme/ThemeContext";
 
 export default function Assistant() {
     const { theme, setTheme } = useTheme();
@@ -37,7 +38,10 @@ export default function Assistant() {
             </div>
 
             <div className="flex flex-col gap-8 items-center justify-center text-6xl text-center font-[family-name:var(--font-hypixel)]">
-                <h1>VISION550准备就绪</h1>
+                <div className="flex flex-col items-center justify-center">
+                    <Image src="/logo.gif" width={250} height={250} alt="logo" unoptimized />
+                    <h1>VISION550准备就绪</h1>
+                </div>
                 <Camera />
                 <h2>聊天记录</h2>
                 <ChatHistory messages={chatHistory} isLoading={isLoading} />

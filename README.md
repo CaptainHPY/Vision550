@@ -8,7 +8,9 @@
     <img src="https://github.com/CaptainHPY/Vision550/blob/main/frontend/public/logo.gif" width="300" height="300">
 </div>
 
-<div align="center" class="mt-4">
+---
+
+<div align="center">
     <a href="https://vision550.vercel.app/">
         <img src="https://img.shields.io/badge/Website-Homepage-blue" alt="Homepage">
     </a>
@@ -54,5 +56,6 @@ Look at [`frontend/README.md`](frontend/README.md) and [`backend/README.md`](bac
 
 ## 🫡 Acknowledgements
 
-Thanks to my teammates: @[zhangfengjun0706](https://github.com/zhangfengjun0706) and @[flaretheflame](https://github.com/flaretheflame).
+Thanks to my teammates: @[zhangfengjun0706](https://github.com/zhangfengjun0706), @[flaretheflame](https://github.com/flaretheflame).
+
 And thanks to [svpino/alloy-voice-assistant](https://github.com/svpino/alloy-voice-assistant) for inspiring!

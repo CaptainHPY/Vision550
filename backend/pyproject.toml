@@ -1,0 +1,16 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Intelligent Video Call Assistant"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "flask>=3.1.0",
+    "flask-cors>=5.0.1",
+    "openai>=1.72.0",
+    "openai-whisper>=20240930",
+    "opencv-python>=4.11.0.86",
+    "pyyaml>=6.0.2",
+    "soundfile>=0.13.1",
+    "speechrecognition>=3.14.2",
+]

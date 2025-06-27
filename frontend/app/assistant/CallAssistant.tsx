@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import audioBufferToWav from 'audiobuffer-to-wav';
+import { updateChatHistory } from '@/lib/actions';
 
 interface CallAssistantProps {
   onUpdateChatHistory: (newMessage: { sender: 'user' | 'assistant'; content: string }) => void;
@@ -12,9 +13,17 @@ const CallAssistant: React.FC<CallAssistantProps> = ({ onUpdateChatHistory }) =>
   const [isRecognizing, setIsRecognizing] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [apiKey, setApiKey] = useState('');
   const audioRef = useRef<HTMLAudioElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+
+  useEffect(() => {
+    const savedApiKey = localStorage.getItem('api_key');
+    if (savedApiKey) {
+      setApiKey(savedApiKey);
+    }
+  }, []);
 
   const recognizeData = async (audioBlob: Blob): Promise<string> => {
     const formData = new FormData();
@@ -53,8 +62,9 @@ const CallAssistant: React.FC<CallAssistantProps> = ({ onUpdateChatHistory }) =>
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(apiKey ? { 'X-API-Key': apiKey } : {})
         },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify({ prompt, apiKey }),
       });
 
       if (!response.ok) {
@@ -100,7 +110,9 @@ const CallAssistant: React.FC<CallAssistantProps> = ({ onUpdateChatHistory }) =>
       } catch (error) {
         console.error('获取音频流失败:', error);
         const errorMessage = error instanceof Error ? error.message : '未知错误';
-        onUpdateChatHistory({ sender: 'assistant', content: errorMessage });
+        const newMessage = { sender: 'assistant' as const, content: errorMessage };
+        onUpdateChatHistory(newMessage);
+        await updateChatHistory(newMessage);
       }
     } else {
       if (mediaRecorderRef.current) {
@@ -116,15 +128,24 @@ const CallAssistant: React.FC<CallAssistantProps> = ({ onUpdateChatHistory }) =>
 
             if (recognizedText) {
               setIsProcessing(true);
-              onUpdateChatHistory({ sender: 'user', content: recognizedText });
+              const userMessage = { sender: 'user' as const, content: recognizedText };
+              onUpdateChatHistory(userMessage);
+              await updateChatHistory(userMessage);
+
               const assistantResponse = await callAssistant(recognizedText);
-              onUpdateChatHistory({ sender: 'assistant', content: assistantResponse });
+              const assistantMessage = { sender: 'assistant' as const, content: assistantResponse };
+              onUpdateChatHistory(assistantMessage);
+              await updateChatHistory(assistantMessage);
+
               setIsProcessing(false);
             }
           } catch (error) {
             console.error('处理录音错误:', error);
             const errorMessage = error instanceof Error ? error.message : '未知错误';
-            onUpdateChatHistory({ sender: 'assistant', content: errorMessage });
+            const newMessage = { sender: 'assistant' as const, content: errorMessage };
+            onUpdateChatHistory(newMessage);
+            await updateChatHistory(newMessage);
+
             setIsRecording(false);
             setIsRecognizing(false);
             setIsProcessing(false);

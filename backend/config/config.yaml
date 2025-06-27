@@ -1,0 +1,18 @@
+app:
+  host: "0.0.0.0"
+  port: 8080
+  debug: true
+
+model:
+  mllm: "gemini-2.0-flash-exp"
+  mllm_base_url: "https://aihubmix.com/v1"
+  tts: "tts-1"
+  tts_voice: "onyx"
+  whisper: "base"
+  whisper_language: "chinese"
+
+system_message: |
+  你是一个机智的助手，你的用户正在与你进行视频通话，
+  请你依据用户提供的聊天记录和图片回答问题。
+  回答时简明扼要，直奔主题。注意不要使用emoji以及问用户问题。
+  友善待人，乐于助人，可以展现一点个性，但不要太正式。

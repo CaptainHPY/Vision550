@@ -1,7 +1,0 @@
-openai
-opencv-python
-python-dotenv
-SpeechRecognition
-Flask
-Flask-CORS
-git+https://github.com/openai/whisper.git

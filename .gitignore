@@ -3,6 +3,8 @@
 # backend environment
 .venv
 .env
+__pycache__/
+.python-version
 
 # frontend dependencies
 frontend/node_modules

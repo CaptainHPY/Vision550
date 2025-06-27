@@ -1,25 +1,26 @@
 ## Getting Started On Backend
 
-*NOTE: You need an `OPENAI_API_KEY` and a `GOOGLE_API_KEY` to run this code. Store them in a `.env` file in the `backend` folder, or set them as environment variables.*
+*NOTE: You need to enter the corresponding API keys in the frontend user interface, which replaces the `.env` file.*
 
-*If you have trouble using api keys above, please contact [me](https://github.com/CaptainHPY).*
+*If you have trouble using api keys, please contact [me](https://github.com/CaptainHPY).*
 
-1. Create a virtual environment:
+1. Install uv: [https://docs.astral.sh/uv/](https://docs.astral.sh/uv/)
+
+2. Create a virtual environment:
 
 ```bash
 cd backend
-python -m venv .venv
-.venv\Scripts\activate
+uv venv
 ```
 
-2. Install the required packages:
+3. Install the required packages:
 
 ```bash
-pip install -r requirements.txt
+uv pip install
 ```
 
-3. Run the server:
+4. Run the server:
 
 ```bash
-python assistant.py
+uv run main.py
 ```

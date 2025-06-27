@@ -5,7 +5,7 @@
 </div>
 
 <div align="center">
-    <img src="https://github.com/CaptainHPY/Vision550/blob/main/frontend/public/logo.gif" width="300" height="300">
+    <img src="https://github.com/CaptainHPY/Vision550/blob/main/frontend/public/logo.gif" width="250" height="250">
 </div>
 
 ---
@@ -23,13 +23,18 @@
 
 https://github.com/user-attachments/assets/cc3b9274-f634-43ac-b286-d15113281082
 
+## :newspaper: News
+
+- **[2025-06-27]** Add a user management system using Neon Database, Drizzle ORM and Auth.js.
+
 ## :sparkles: Features
 
 *NOTE: Video is captured when the `<CallAssistant />` button `isRecognizing` your speech.*
 
-1. :robot: **Intelligent Assistant:** Build with Gemini 1.5 Flash and OpenAI's Text-To-Speech model.
-2. :art: **Modern UI Design:** Build with Next.js, TailwindCSS and DaisyUI.
+1. :robot: **Intelligent Assistant:** Built with Gemini 2.0 Flash and OpenAI's Text-To-Speech model.
+2. :art: **Modern UI Design:** Built with Next.js, TailwindCSS and DaisyUI.
 3. :moon: **Dark/Light mode:** Choose the theme you like.
+4. :file_folder: **User Management:** Built with Neon Database, Drizzle ORM and Auth.js.
 
 ## :wrench: Tech Stack
 
@@ -40,10 +45,14 @@ https://github.com/user-attachments/assets/cc3b9274-f634-43ac-b286-d15113281082
 - TailwindCSS
 - DaisyUI
 - Bun
+- Neon
+- Drizzle ORM
+- Auth.js
 
 ### Backend
 
 - Python
+- uv
 - Flask
 
 ## :hammer: Quick Start
@@ -56,6 +65,6 @@ Look at [`frontend/README.md`](frontend/README.md) and [`backend/README.md`](bac
 
 ## 🫡 Acknowledgements
 
-Thanks to my teammates: @[zhangfengjun0706](https://github.com/zhangfengjun0706), @[flaretheflame](https://github.com/flaretheflame).
+Thank my teammates: @[zhangfengjun0706](https://github.com/zhangfengjun0706), @[flaretheflame](https://github.com/flaretheflame).
 
-And thanks to [svpino/alloy-voice-assistant](https://github.com/svpino/alloy-voice-assistant) for inspiring!
+And thank @[Nagi-ovo](https://www.nagi.fun), [svpino/alloy-voice-assistant](https://github.com/svpino/alloy-voice-assistant) for inspiring!

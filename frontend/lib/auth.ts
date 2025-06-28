@@ -99,6 +99,7 @@ export const authConfig = {
                     }
 
                     sessionToken = uuid();
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const createdSession = await (authConfig.adapter as any)?.createSession?.({
                         sessionToken: sessionToken,
                         userId: params.token.sub,

@@ -1,9 +1,11 @@
-'use server';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use server";
 
+import { Readable } from "stream";
 import bcrypt from "bcryptjs";
-import { v2 as cloudinary } from 'cloudinary';
+import { v2 as cloudinary } from "cloudinary";
 import { eq } from "drizzle-orm";
-import { signIn, signOut, auth } from '@/lib/auth';
+import { signIn, signOut, auth } from "@/lib/auth";
 import { schema } from "@/lib/schema";
 import { db } from "@/lib/db";
 import { executeAction } from "@/lib/executeaction";
@@ -72,7 +74,7 @@ export async function updateChatHistory(newMessage: { sender: 'user' | 'assistan
         const userId = await getCurrentUserIdOrThrow();
         const user = await getUserByIdOrThrow(userId);
 
-        let chatHistory = parseChatHistory(user.chatHistory);
+        const chatHistory = parseChatHistory(user.chatHistory);
         chatHistory.push(newMessage);
 
         await db.update(users)
@@ -93,7 +95,7 @@ export async function getUserChatHistory() {
         const userId = await getCurrentUserIdOrThrow();
         const user = await getUserByIdOrThrow(userId);
 
-        let chatHistory = parseChatHistory(user.chatHistory);
+        const chatHistory = parseChatHistory(user.chatHistory);
         return { success: true, message: "获取聊天历史成功", data: chatHistory };
     } catch (error: any) {
         console.error("获取聊天历史错误:", error);
@@ -106,7 +108,7 @@ export async function deleteChatPair(userMsgIndex: number) {
         const userId = await getCurrentUserIdOrThrow();
         const user = await getUserByIdOrThrow(userId);
 
-        let chatHistory = parseChatHistory(user.chatHistory);
+        const chatHistory = parseChatHistory(user.chatHistory);
 
         if (
             userMsgIndex < 0 ||
@@ -163,14 +165,13 @@ export const signUp = async (formData: FormData) => {
                         }
                     );
 
-                    const Readable = require('stream').Readable;
                     const readableStream = new Readable();
                     readableStream.push(buffer);
                     readableStream.push(null);
                     readableStream.pipe(uploadStream);
                 });
 
-                // @ts-ignore
+                // @ts-expect-error incompatible return type
                 avatarUrl = result.secure_url;
             }
 

@@ -77,7 +77,9 @@ export default function User({ onLoginStatusChange, onApiKeyChange }: UserProps)
                     <div className="drawer-side">
                         <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
                         <ul className="menu bg-base-200 text-base-content min-h-full w-100 p-4">
-                            <div className="tooltip tooltip-bottom ml-auto" style={{ width: '24px' }} data-tip="hello">
+                            <div
+                                className="tooltip tooltip-bottom ml-auto" style={{ width: '24px' }}
+                                data-tip="您可以同时填入您的GOOGLE_API_KEY和OPENAI_API_KEY，或只填入ANOTHER_MLLM_API_KEY（例如aihubmix，siliconflow等一站式云服务平台）">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info h-6 w-6 shrink-0">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>

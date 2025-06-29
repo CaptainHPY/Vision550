@@ -63,6 +63,7 @@ export async function passwordMatch(name: string, password: string) {
     if (!passwordMatch) {
         return { success: false, message: "密码错误" };
     }
+    return { success: true };
 }
 
 export async function getCurrentUser() {

@@ -25,8 +25,8 @@ export default function Page() {
         setSuccess('');
 
         const result = await passwordMatch(name, password);
-        if (!result || !result.success) {
-            setError(result?.message || '登录失败，请稍后重试');
+        if (!result.success) {
+            setError(result.message || '登录失败，请稍后重试');
         }
         else {
             const formData = new FormData(e.target as HTMLFormElement);

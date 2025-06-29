@@ -17,12 +17,52 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-export async function isUserExisted(name: string) {
-    const existingUser = await db.query.users.findFirst({
+async function getCurrentUserId() {
+    const session = await auth();
+    if (!session || !session.user) {
+        throw new Error("用户未登录");
+    }
+    return session.user.id;
+}
+
+async function getUserById(userId: string) {
+    const user = await db.query.users.findFirst({
+        where: (users, { eq }) => eq(users.id, userId)
+    });
+    if (!user) {
+        throw new Error("找不到用户");
+    }
+    return user;
+}
+
+function parseChatHistory(chatHistoryStr: string | null | undefined) {
+    if (!chatHistoryStr) return [];
+    try {
+        return JSON.parse(chatHistoryStr);
+    } catch {
+        return [];
+    }
+}
+
+export async function getUserByName(name: string) {
+    const user = await db.query.users.findFirst({
         where: (users, { eq }) => eq(users.name, name)
     });
-    console.log(existingUser);
-    return existingUser !== undefined;
+    return user;
+}
+
+export async function passwordMatch(name: string, password: string) {
+    const user = await getUserByName(name);
+    if (!user) {
+        throw new Error("用户不存在");
+    }
+    const passwordMatch = await bcrypt.compare(
+        password,
+        user.password as string
+    );
+    if (!passwordMatch) {
+        throw new Error("密码错误");
+    }
 }
 
 export async function getCurrentUser() {
@@ -42,37 +82,10 @@ export async function getCurrentUser() {
     };
 }
 
-async function getCurrentUserIdOrThrow() {
-    const session = await auth();
-    if (!session || !session.user) {
-        throw new Error("用户未登录");
-    }
-    return session.user.id;
-}
-
-async function getUserByIdOrThrow(userId: string) {
-    const user = await db.query.users.findFirst({
-        where: (users, { eq }) => eq(users.id, userId)
-    });
-    if (!user) {
-        throw new Error("找不到用户");
-    }
-    return user;
-}
-
-function parseChatHistory(chatHistoryStr: string | null | undefined) {
-    if (!chatHistoryStr) return [];
-    try {
-        return JSON.parse(chatHistoryStr);
-    } catch {
-        return [];
-    }
-}
-
 export async function updateChatHistory(newMessage: { sender: 'user' | 'assistant'; content: string }) {
     try {
-        const userId = await getCurrentUserIdOrThrow();
-        const user = await getUserByIdOrThrow(userId);
+        const userId = await getCurrentUserId();
+        const user = await getUserById(userId);
 
         const chatHistory = parseChatHistory(user.chatHistory);
         chatHistory.push(newMessage);
@@ -92,8 +105,8 @@ export async function updateChatHistory(newMessage: { sender: 'user' | 'assistan
 
 export async function getUserChatHistory() {
     try {
-        const userId = await getCurrentUserIdOrThrow();
-        const user = await getUserByIdOrThrow(userId);
+        const userId = await getCurrentUserId();
+        const user = await getUserById(userId);
 
         const chatHistory = parseChatHistory(user.chatHistory);
         return { success: true, message: "获取聊天历史成功", data: chatHistory };
@@ -105,8 +118,8 @@ export async function getUserChatHistory() {
 
 export async function deleteChatPair(userMsgIndex: number) {
     try {
-        const userId = await getCurrentUserIdOrThrow();
-        const user = await getUserByIdOrThrow(userId);
+        const userId = await getCurrentUserId();
+        const user = await getUserById(userId);
 
         const chatHistory = parseChatHistory(user.chatHistory);
 

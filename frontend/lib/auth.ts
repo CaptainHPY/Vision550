@@ -1,7 +1,6 @@
 import { v4 as uuid } from "uuid"
 import { encode as defaultEncode } from "next-auth/jwt";
 
-import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm"
 import NextAuth, { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
@@ -25,19 +24,6 @@ export const authConfig = {
                     eq(users.name, validatedCredentials.name)
                 )
                 .then(res => res[0]);
-
-            if (!user) {
-                throw new Error("Invalid credentials.");
-            }
-
-            const passwordMatch = await bcrypt.compare(
-                validatedCredentials.password,
-                user.password as string
-            );
-
-            if (!passwordMatch) {
-                throw new Error("password is incorrect.");
-            }
 
             return {
                 id: user.id,

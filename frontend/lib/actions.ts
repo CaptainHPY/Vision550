@@ -54,14 +54,14 @@ export async function getUserByName(name: string) {
 export async function passwordMatch(name: string, password: string) {
     const user = await getUserByName(name);
     if (!user) {
-        throw new Error("用户不存在");
+        return { success: false, message: "用户不存在" };
     }
     const passwordMatch = await bcrypt.compare(
         password,
         user.password as string
     );
     if (!passwordMatch) {
-        throw new Error("密码错误");
+        return { success: false, message: "密码错误" };
     }
 }
 

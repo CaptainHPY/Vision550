@@ -23,17 +23,18 @@ export default function Page() {
         setLoading(true);
         setError('');
         setSuccess('');
-        try {
-            await passwordMatch(name, password);
+
+        const result = await passwordMatch(name, password);
+        if (!result || !result.success) {
+            setError(result?.message || '登录失败，请稍后重试');
+        }
+        else {
             const formData = new FormData(e.target as HTMLFormElement);
             await logIn(formData);
             setSuccess('登录成功！即将跳转到首页...');
             setTimeout(() => router.push('/'), 2000);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : '登录失败，请稍后重试');
-        } finally {
-            setLoading(false);
         }
+        setLoading(false);
     };
 
     return (
